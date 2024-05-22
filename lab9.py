@@ -34,12 +34,10 @@ class Neuron:
                                      ]
         self.biases = [0.38, -0.37, -0.29]
         self.biases2 = [0.36, 0.58, 0.17]
-        self.bias = 1
-        self.alpha = 0.05
+        self.alpha = 0.1
         self.flag = 0 # flag to stop after no more changes are made
         self.changes = True
         self.count = 0;
-        self.correct = 0
         with open(csv_file) as csvDataFile:
             csvReader = csv.reader(csvDataFile)
             for row in csvReader:
@@ -53,13 +51,6 @@ class Neuron:
                 self.count += 1
                 #print(self.count)
     # -----------------------Methods-----------------------
-    def printPredictions(self):
-        if len(self.predicted_labels) == 0:
-            print("Array is empty")
-        else:
-            for i in (self.predicted_labels):
-                print(i);
-    
     def adjustWeights(self, hOutputs, outputsL, err, index):
         gradientOutputLayer = []
         gradientHiddenLayer = []
@@ -88,12 +79,14 @@ class Neuron:
             #print(str(st))
             self.biases2[j] = self.biases2[j] + self.alpha * gradientOutputLayer[j] * (-1.0)
 
+        #print("OW: " + str(self.output_layer_weights) )
         # 
         inputs = [self.sepal_length[index], self.sepal_width[index], self.petal_length[index], self.petal_width[index]]
         for i in range(3):
             for j in range(4):    
                 self.hidden_layer_weights[i][j] = self.hidden_layer_weights[i][j] + self.alpha * gradientHiddenLayer[i] * inputs[j]
             self.biases[i] = self.biases[i] + self.alpha * gradientHiddenLayer[i] * (-1.0)
+        #print("OL: " + str(self.hidden_layer_weights) )
     def hLayer(self,index):
         # STEP 2 in NN for Hidden Layer
         Yi = []
@@ -122,7 +115,7 @@ class Neuron:
         return err
     def perceptronTraining(self):
         # ---------Initialization-------
-        while self.flag < 100:
+        while True:
             #self.changes = False
             self.correct = 0
             self.MAD = 0
@@ -130,13 +123,14 @@ class Neuron:
             for i in range(0, len(self.sepal_length) ):          
                 #outputStr = ""
                 #outputStr += ("Iteration: " + str(i+1) + " weights are " + self.printWeights())
-                # Activation Function call
+                # Activation Hidden Layer Function call
                 activation = self.hLayer(i)
                 #print("act:" + str(activation) )
+                # Activate Output Layer Function
                 prediction = self.activationFunc(activation)
                 #print("pred:" + str(prediction) )
                 error = self.errorFunc(i, prediction)
-                #print(error)
+                #print("errors:" + str(error))
                 self.MAD += (abs(error[0]) + abs(error[1]) + abs(error[2]))
                 # Back propagation
                 self.adjustWeights(activation, prediction, error, i)
@@ -151,12 +145,8 @@ class Neuron:
             self.flag += 1
             
             print()
-        '''# PRINT RESULT PERCENT
-        res = self.correct / self.count
-        print("Num of samples: " + " " + str(self.count) + " \nNum of correct predictions: " + str(self.correct))
-        print(str(res) + " % correct!")'''
 
-# Example usage:
+# 
 neuron = Neuron('iris.csv')
 neuron.perceptronTraining()
 
