@@ -11,13 +11,10 @@ class Neuron:
         self.sepal_width = []
         self.petal_length = []
         self.petal_width = []
-        #self.plant_species = [][]
         rows, cols = (150, 3)
-        #self.plant_species = [[0]*cols]*rows
         self.plant_species = [[0] * cols for _ in range(rows)]
         self.predicted_labels = []
         self.MAD = 0
-        #self.weights = [1,-1,0.5,0]
         # Replace with hidden layer weights and output layers weights
         # initial weight were generated using the range of 
         #
@@ -107,19 +104,6 @@ class Neuron:
         Yi[1] = 1.0/(1.0 + np.exp(-Yi[1]) )
         Yi[2] = 1.0/(1.0 + np.exp(-Yi[2]) )
         return Yi
-    '''
-    def activationFunc(self, hOutput):
-        actual = []
-        for k in range(3):
-            actual.append( (hOutput[0] * self.output_layer_weights[k][0] + hOutput[1] * self.output_layer_weights[k][1] + 
-                hOutput[2] * self.output_layer_weights[k][2]) - self.biases2[k] )
-       
-        actual[0] = 1.0/(1.0 + cmath.exp(-actual[0]) ) 
-        actual[1] = 1.0/(1.0 + cmath.exp(-actual[1]) )
-        actual[2] = 1.0/(1.0 + cmath.exp(-actual[2]) ) 
-        return actual
-    ''' 
-    
     def activationFunc(self, hOutput):
         # STEP 2 in NN Activation for Output Layer
         actual = []
